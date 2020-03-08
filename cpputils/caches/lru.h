@@ -18,7 +18,6 @@ public:
     size_t capacity();
     void print() const;
 private:
-    void update(int32_t key);
     void moveToHead(NodeList* node);
 
     size_t size_;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include "common.h"
+#include <list>
 
 namespace cpputils {
 
@@ -18,12 +19,11 @@ public:
     size_t capacity();
     void print() const;
 private:
-    void moveToHead(NodeList* node);
+    void moveToHead(std::list<std::pair<int32_t, int32_t>>::iterator& iter);
 
     size_t size_;
-    NodeList* head_;
-    NodeList* tail_;
-    std::unordered_map<int32_t, NodeList*> kvs_;
+    std::list<std::pair<int32_t, int32_t>> keys_;
+    std::unordered_map<int32_t, std::list<std::pair<int32_t, int32_t>>::iterator> kvs_;
 
 };
 

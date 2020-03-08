@@ -6,67 +6,37 @@ namespace cpputils {
 LRU::LRU(size_t size) {
     size_ = size;
     kvs_.reserve(size);
-    head_ = nullptr;
-    tail_ = nullptr;
 }
 
-void LRU::moveToHead(NodeList* node) {
-    if (kvs_.size() == 0) {
-        head_ = node;
-        node->next = tail_;
-        return;
-    }
-    if (node == head_) {
-        return;
-    }
-    NodeList* next = node->next;
-    NodeList* before = node->before;
-    if (node == tail_) {
-        before = tail_;
-    }
-    if (before != nullptr) {
-        before->next = next;
-    }
-    if (next != nullptr) {
-        next->before = before;
-    }
-    head_->before = node;
-    node->next = head_;
-    node->before = nullptr;
-    head_ = node;
+void LRU::moveToHead(std::list<std::pair<int32_t, int32_t>>::iterator& iter) {
+    keys_.erase(iter);
+    keys_.push_front(*iter);
 }
 
 void LRU::set(int32_t key, int32_t value) {
-    NodeList* node = nullptr;
+    std::pair<int32_t, int32_t> temp_pair = std::make_pair(key, value);
     if (kvs_.find(key) != kvs_.end()) {
-        node = kvs_[key];
-        node->value = value;
-        moveToHead(node);
-        return;
+        auto iter = kvs_[key];
+        keys_.erase(iter);
+        kvs_.erase(key);
     }
     if (kvs_.size() == size_) {
-        tail_->key = key;
-        tail_->value = value;
-        moveToHead(tail_);
-    } else {
-        node = new NodeList();
-        node->key = key;
-        node->value = value;
-        moveToHead(node);
-        kvs_[key] = node;
-        if (kvs_.size() == size_) {
-            tail_ = node;
-        }
+        auto temp_pair = keys_.back();
+        keys_.pop_back();
+        kvs_.erase(temp_pair.first);
     }
+    keys_.push_front(temp_pair);
+    kvs_[key] = keys_.begin();
 }
 
 bool LRU::get(int32_t key, int32_t& value) {
     if (kvs_.find(key) == kvs_.end()) {
         return false;
     }
-    NodeList* node = kvs_[key];
-    value = node->value;
-    moveToHead(node);
+    auto& temp_pair = kvs_[key];
+    value = temp_pair->second;
+    moveToHead(temp_pair);
+    std::cout<<"value is: "<< value<<std::endl;
     return true;
 }
 
@@ -81,7 +51,13 @@ size_t LRU::capacity() {
 void LRU::clear() {
     kvs_.clear();
     kvs_.reserve(size_);
+    keys_.clear();
 }
 
+void LRU::print() const {
+    for (auto pair : keys_) {
+        std::cout<<pair.first <<" " << pair.second<<std::endl;
+    }
+}
 
 } // namespace cpputils

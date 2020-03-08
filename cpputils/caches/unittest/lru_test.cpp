@@ -3,7 +3,7 @@
 #include <cassert>
 
 int main() {
-    std::cout<<" hello unittest"<<std::endl;
+    std::cout<<"hello lru unittest"<<std::endl;
     cpputils::LRU lru(3);
     int32_t value=0;
     assert(lru.size() == 3);

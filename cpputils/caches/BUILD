@@ -8,7 +8,7 @@ cc_library(
 cc_binary(
     name='lru_test',
     srcs=[
-        './lru.cpp',
         './unittest/lru_test.cpp'
     ],
+    deps=[":lru"]
 )

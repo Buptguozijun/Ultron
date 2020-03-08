@@ -1,4 +1,4 @@
-#include "./lru.h"
+#include "lru.h"
 #include <iostream>
 
 namespace cpputils {

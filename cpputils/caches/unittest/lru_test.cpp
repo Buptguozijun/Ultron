@@ -31,6 +31,6 @@ int main() {
     lru.set(1, 3);
     assert(lru.get(2, value) == false);
     std::cout<<"set reset lru ok"<<std::endl;
-
+    return 1;
 
 }

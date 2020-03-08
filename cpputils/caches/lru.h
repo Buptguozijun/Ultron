@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <unordered_map>
+#include "common.h"
 
 namespace cpputils {
 
@@ -18,11 +19,12 @@ public:
     void print() const;
 private:
     void update(int32_t key);
+    void moveToHead(NodeList* node);
+
     size_t size_;
-    // kvs_ 存放key value对
-    std::unordered_map<int32_t, int32_t> kvs_;
-    // keys 用于存放LRU的顺序
-    std::vector<int32_t> keys_;
+    NodeList* head_;
+    NodeList* tail_;
+    std::unordered_map<int32_t, NodeList*> kvs_;
 
 };
 

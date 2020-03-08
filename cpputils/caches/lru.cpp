@@ -6,44 +6,72 @@ namespace cpputils {
 LRU::LRU(size_t size) {
     size_ = size;
     kvs_.reserve(size);
-    keys_.reserve(size);
+    head_ = nullptr;
+    tail_ = nullptr;
+}
+
+void LRU::moveToHead(NodeList* node) {
+    if (kvs_.size() == 0) {
+        head_ = node;
+        node->next = tail_;
+        return;
+    }
+    if (node == head_) {
+        return;
+    }
+    NodeList* next = node->next;
+    NodeList* before = node->before;
+    if (node == tail_) {
+        before = tail_;
+    }
+    if (before != nullptr) {
+        before->next = next;
+    }
+    if (next != nullptr) {
+        next->before = before;
+    }
+    head_->before = node;
+    node->next = head_;
+    node->before = nullptr;
+    head_ = node;
 }
 
 void LRU::set(int32_t key, int32_t value) {
+    NodeList* node = nullptr;
     if (kvs_.find(key) != kvs_.end()) {
-        update(key);
-        kvs_[key] = value;
+        node = kvs_[key];
+        node->value = value;
+        moveToHead(node);
         return;
     }
     if (kvs_.size() == size_) {
-        int32_t del_key = keys_.back();
-        kvs_.erase(del_key);
-        keys_.erase(keys_.end() -1);
+        tail_->key = key;
+        tail_->value = value;
+        moveToHead(tail_);
+    } else {
+        node = new NodeList();
+        node->key = key;
+        node->value = value;
+        moveToHead(node);
+        kvs_[key] = node;
+        if (kvs_.size() == size_) {
+            tail_ = node;
+        }
     }
-    kvs_[key] = value;
-    keys_.insert(keys_.begin(), key);
-    return;
 }
 
 bool LRU::get(int32_t key, int32_t& value) {
     if (kvs_.find(key) == kvs_.end()) {
         return false;
     }
-    value = kvs_[key];
-    update(key);
+    NodeList* node = kvs_[key];
+    value = node->value;
+    moveToHead(node);
     return true;
 }
 
-void LRU::update(int32_t key) {
-    auto iter = std::find(keys_.begin(), keys_.end(),
-            key);
-    keys_.erase(iter);
-    keys_.insert(keys_.begin(), key);
-}
-
 size_t LRU::size() {
-    return keys_.size() == kvs_.size()?
-           keys_.size():-1;
+    return kvs_.size();
 }
 
 size_t LRU::capacity() {
@@ -52,24 +80,8 @@ size_t LRU::capacity() {
 
 void LRU::clear() {
     kvs_.clear();
-    keys_.clear();
     kvs_.reserve(size_);
-    keys_.reserve(size_);
 }
 
-void LRU::print() const {
-    if (keys_.size() != kvs_.size()) {
-        std::cout<<"LRU ERROR"<<std::endl;
-    }
-    std::cout<<" key is: "<<std::endl;
-    for (auto& key : keys_) {
-        std::cout<<key<<" ";
-    }
-    std::cout<<" "<<std::endl;
-    for (auto iter = kvs_.begin(); iter != kvs_.end(); iter++) {
-        std::cout<<iter->first<<" "<< iter->second<<std::endl;
-    }
 
-}
-
-}
+} // namespace cpputils

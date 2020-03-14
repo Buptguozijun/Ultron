@@ -4,7 +4,7 @@
  * @Author: guozijun
  * @Date: 2020-03-12 07:10:31
  * @LastEditors: guozijun
- * @LastEditTime: 2020-03-14 02:08:04
+ * @LastEditTime: 2020-03-14 06:13:54
  */
 #include <iostream>
 #include "../lru.h"
@@ -14,7 +14,7 @@ int main() {
   std::string cmd;
   int size = 0;
   std::cin >> size;
-  cpputils::LRU lru(size);
+  cpputils::LRU<int, int> lru(size);
   std::cout << " lru size is: " << lru.capacity() << std::endl;
   while (std::getline(std::cin, cmd)) {
     if (cmd == "set") {

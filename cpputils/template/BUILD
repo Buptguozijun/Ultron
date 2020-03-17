@@ -1,7 +1,7 @@
 cc_library(
-    name='template_compare',
+    name='singleton',
     srcs=[
-        './template.h'
+        './singleton.h'
     ],
 )
 
@@ -10,5 +10,5 @@ cc_binary(
     srcs=[
         './unittest/template_test.cpp'
     ],
-    deps=[":template_compare"]
+    deps=[":singleton"]
 )

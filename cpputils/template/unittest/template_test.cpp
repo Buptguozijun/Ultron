@@ -4,33 +4,33 @@
  * @Author: guozijun
  * @Date: 2020-03-13 07:01:33
  * @LastEditors: guozijun
- * @LastEditTime: 2020-03-14 02:07:33
+ * @LastEditTime: 2020-03-17 07:18:13
  */
 
 #include <iostream>
 #include <string>
-#include "../template.h"
+#include <assert.h>
+#include "../singleton.h"
 
+class Manager {
+ public:
+  Manager(int book) {
+    book_ = book;
+  }
+  int getBook() {
+    return book_;
+  }
+
+ private:
+  int book_;
+};
+using managerSingleton = cpputils::Singleton<Manager>;
 int main() {
   std::cout << "Hello templateV2" << std::endl;
-  std::string cmd;
-  int size = 0;
-  std::cin >> size;
-  cpputils::TemplateMap<std::string> lru(size);
-  while (std::getline(std::cin, cmd)) {
-    if (cmd == "set") {
-      std::string key;
-      std::string value;
-      std::cin >> key >> value;
-      lru.set(key, value);
-    } else if (cmd == "get") {
-      std::string key;
-      std::string value;
-      std::cin >> key;
-      lru.get(key, value);
-    } else if (cmd == "print") {
-      lru.print();
-    }
-  }
+
+  std::shared_ptr<Manager> manager_ = managerSingleton::getInstance(5);
+  std::shared_ptr<Manager> manager_2 = managerSingleton::getInstance(6);
+  assert(manager_->getBook() == manager_2->getBook());
+  std::cout << "singleton test success" << std::endl;
   return 1;
 }

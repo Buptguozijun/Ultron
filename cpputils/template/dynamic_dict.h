@@ -4,12 +4,16 @@
  * @Author: guozijun
  * @Date: 2020-03-22 05:36:09
  * @LastEditors: guozijun
- * @LastEditTime: 2020-03-22 06:14:40
+ * @LastEditTime: 2020-03-22 06:22:07
  */
 
 #include <shared_mutex>
 #include <memory>
 #include <mutex>
+
+/*
+ * 常见用法：现在外部构造好一个shared_ptr, 然后调用Swap方法将shared_ptr传入
+ */
 
 namespace cpputils {
 typedef std::shared_lock<std::shared_mutex> read_lock;

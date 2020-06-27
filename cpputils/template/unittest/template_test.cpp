@@ -4,33 +4,33 @@
  * @Author: guozijun
  * @Date: 2020-03-13 07:01:33
  * @LastEditors: guozijun
- * @LastEditTime: 2020-03-14 02:07:33
+ * @LastEditTime: 2020-06-27 21:55:27
  */
 
 #include <iostream>
 #include <string>
-#include "../template.h"
+#include "../singleton.h"
+
+class Calc{
+public:
+    Calc(int32_t n=0) {
+      number = n;
+    }
+    void add() {
+      number++;
+      print();
+    }
+    void print() {
+      std::cout<<" num is : "<< number <<std::endl;
+    }
+private:
+    int32_t number;
+};
 
 int main() {
-  std::cout << "Hello templateV2" << std::endl;
-  std::string cmd;
-  int size = 0;
-  std::cin >> size;
-  cpputils::TemplateMap<std::string> lru(size);
-  while (std::getline(std::cin, cmd)) {
-    if (cmd == "set") {
-      std::string key;
-      std::string value;
-      std::cin >> key >> value;
-      lru.set(key, value);
-    } else if (cmd == "get") {
-      std::string key;
-      std::string value;
-      std::cin >> key;
-      lru.get(key, value);
-    } else if (cmd == "print") {
-      lru.print();
-    }
-  }
+  std::cout<<" hello singleton" << std::endl;
+  ::cpputils::Singleton<Calc>::Instance(1)->print();
+  ::cpputils::Singleton<Calc>::Instance(2)->add();
+
   return 1;
 }
